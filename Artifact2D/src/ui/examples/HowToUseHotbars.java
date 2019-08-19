@@ -9,10 +9,10 @@ import ui.border.BorderFactory;
 import ui.border.CompoundBorder;
 import ui.layout.Anchor;
 
-public class HotBarExample extends Game {
+public class HowToUseHotbars extends Game {
 	
 	public static void main(String[] args) {
-		HotBarExample game = new HotBarExample();
+		HowToUseHotbars game = new HowToUseHotbars();
 		game.setTitle("How to use hotbars");
 		game.setSize(480, 270, 3);
 		game.start();
