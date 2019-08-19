@@ -32,6 +32,7 @@ public class Game {
 	private UiElement uiRoot;
 	private Color clearColor;
 	private Font font;
+	private String title;
 
 	public Game() {
 		this(800, 600, 1);
@@ -109,6 +110,7 @@ public class Game {
 	private JFrame getJFrame() {
 		if (jFrame == null) {
 			jFrame = new JFrame();
+			jFrame.setTitle(title);
 			jFrame.setSize(width * scale, height * scale);
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			jFrame.setIgnoreRepaint(true);
@@ -188,7 +190,9 @@ public class Game {
 	}
 
 	public void setTitle(String title) {
-		getJFrame().setTitle(title);
+		this.title = title;
+		if (running)
+			getJFrame().setTitle(title);
 	}
 
 	public UiElement getUiRoot() {
