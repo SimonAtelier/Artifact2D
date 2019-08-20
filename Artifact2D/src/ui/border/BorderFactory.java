@@ -3,8 +3,30 @@ package ui.border;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import game.Resources;
+
 public class BorderFactory {
 
+	public static Border createNineSliceBorder(String file, boolean fillCenter) {
+		NineSliceBorder border = new NineSliceBorder(Resources.load(file));
+		border.setFillCenter(fillCenter);
+		return border;
+	}
+	
+	public static Border createNineSliceBorder(String file) {
+		return createNineSliceBorder(file, false);
+	}
+	
+	public static Border createNineSliceBorder(BufferedImage image, boolean fillCenter) {
+		NineSliceBorder border = new NineSliceBorder(image);
+		border.setFillCenter(fillCenter);
+		return border;
+	}
+	
+	public static Border createNineBorder(BufferedImage image) {
+		return createNineSliceBorder(image, false);
+	}
+	
 	public static Border createDashedBorder(Color color) {
 		return new DashedBorder(color);
 	}

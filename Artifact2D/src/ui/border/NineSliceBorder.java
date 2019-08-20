@@ -12,6 +12,7 @@ public class NineSliceBorder implements Border {
 	private int y;
 	private int width;
 	private int height;
+	private boolean fillCenter = false;
 	private Graphics2D g2d;
 	private ImageSlicer slicer;
 	private Insets insets;
@@ -20,6 +21,7 @@ public class NineSliceBorder implements Border {
 	private Rectangle2D westTextureAnchor;
 	private Rectangle2D southTextureAnchor;
 	private Rectangle2D eastTextureAnchor;
+	private Rectangle2D centerTextureAnchor;
 
 	public NineSliceBorder(BufferedImage image) {
 		slicer = new ImageSlicer(image);
@@ -32,6 +34,7 @@ public class NineSliceBorder implements Border {
 		westTextureAnchor = new Rectangle2D.Double();
 		southTextureAnchor = new Rectangle2D.Double();
 		eastTextureAnchor = new Rectangle2D.Double();
+		centerTextureAnchor = new Rectangle2D.Double();
 	}
 
 	@Override
@@ -47,6 +50,7 @@ public class NineSliceBorder implements Border {
 		updateTextureAnchor(getWestTextureAnchor(), getX(), getY() + getSliceHeight());
 		updateTextureAnchor(getSouthTextureAnchor(), getX() + getSliceWidth(), getMaxY() - getSliceHeight());
 		updateTextureAnchor(getEastTextureAnchor(), getMaxX() - getSliceWidth(), getY() + getSliceHeight());
+		updateTextureAnchor(getCenterTextureAnchor(), getX() + getSliceWidth(), getY() + getSliceHeight());
 	}
 
 	private void updateTextureAnchor(Rectangle2D anchor, int x, int y) {
@@ -62,8 +66,9 @@ public class NineSliceBorder implements Border {
 		renderWest();
 		renderSouth();
 		renderEast();
+		renderCenter();
 	}
-
+	
 	private void renderSouthWest() {
 		renderImage(getSouthWestSlice(), getX(), getMaxY() - getSliceHeight());
 	}
@@ -78,6 +83,13 @@ public class NineSliceBorder implements Border {
 
 	private void renderSouthEast() {
 		renderImage(getSouthEastSlice(), getMaxX() - getSliceWidth(), getMaxY() - getSliceHeight());
+	}
+	
+	private void renderCenter() {
+		if (!fillCenter)
+			return;
+		setTexture(getCenterSlice(), getCenterTextureAnchor());
+		fillRect(getX() + getSliceWidth(), getY() + getSliceHeight(), getInnerWidth(), getInnerHeight());
 	}
 
 	private void renderNorth() {
@@ -138,6 +150,10 @@ public class NineSliceBorder implements Border {
 	private BufferedImage getWestSlice() {
 		return slicer.getSliceAt(3);
 	}
+	
+	private BufferedImage getCenterSlice() {
+		return slicer.getSliceAt(4);
+	}
 
 	private BufferedImage getEastSlice() {
 		return slicer.getSliceAt(5);
@@ -195,6 +211,14 @@ public class NineSliceBorder implements Border {
 		return getHeight() - getSliceHeight() - getSliceHeight();
 	}
 
+	public boolean isFillCenter() {
+		return fillCenter;
+	}
+
+	public void setFillCenter(boolean fillCenter) {
+		this.fillCenter = fillCenter;
+	}
+
 	@Override
 	public Insets getInsets() {
 		return insets;
@@ -214,6 +238,10 @@ public class NineSliceBorder implements Border {
 
 	public Rectangle2D getEastTextureAnchor() {
 		return eastTextureAnchor;
+	}
+	
+	public Rectangle2D getCenterTextureAnchor() {
+		return centerTextureAnchor;
 	}
 
 	private class ImageSlicer {
