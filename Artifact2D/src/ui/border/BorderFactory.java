@@ -7,6 +7,14 @@ import game.Resources;
 
 public class BorderFactory {
 
+	public static Border createColoredCornersBorder(int size, Color color, Color cornerColor) {
+		return new ColoredCornersBorder(size, color, cornerColor);
+	}
+	
+	public static Border createColoredCornersBorder(Color color, Color cornerColor) {
+		return new ColoredCornersBorder(1, color, cornerColor);
+	}
+	
 	public static Border createCornerGapBorder(int size, Color color) {
 		return new CornerGapBorder(size, color);
 	}
