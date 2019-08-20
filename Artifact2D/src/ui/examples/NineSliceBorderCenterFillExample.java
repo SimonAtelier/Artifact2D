@@ -51,7 +51,7 @@ public class NineSliceBorderCenterFillExample extends Game {
 		g2d.drawImage(borderImage, 0, 0, null);
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.drawString("All rights of this border image are reserved by 'Shaun Spalding'.", 40, 40);
-		g2d.drawString("Support him at patreon and YouTube.", 40, 50);
+		g2d.drawString("Support him on patreon and YouTube.", 40, 50);
 		g2d.drawString("https://www.patreon.com/shaunjs", 40, 60);
 		g2d.drawString("https://www.youtube.com/watch?v=Cgb6yw1WdRw", 40, 70);
 	}
