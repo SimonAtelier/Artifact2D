@@ -6,7 +6,6 @@ import game.Game;
 import ui.Panel;
 import ui.border.Border;
 import ui.border.BorderFactory;
-import ui.border.CornerGapBorder;
 import ui.layout.Anchor;
 import ui.layout.GridLayout;
 
@@ -42,7 +41,7 @@ public class BorderExample extends Game {
 		addBorderPanel(BorderFactory.createMessageBoxBorder(Color.WHITE, Color.BLACK));
 		addBorderPanel(BorderFactory.createRaisedEtchedBorder(Color.LIGHT_GRAY, Color.DARK_GRAY));
 		addBorderPanel(BorderFactory.createTitledBorder("Untitled", 2, Color.GRAY, Color.WHITE));
-		addBorderPanel(new CornerGapBorder(4, Color.LIGHT_GRAY));
+		addBorderPanel(BorderFactory.createCornerGapBorder(3, Color.LIGHT_GRAY));
 	}
 	
 	private Panel createMainPanel() {

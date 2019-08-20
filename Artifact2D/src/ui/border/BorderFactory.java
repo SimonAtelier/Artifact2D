@@ -7,6 +7,14 @@ import game.Resources;
 
 public class BorderFactory {
 
+	public static Border createCornerGapBorder(int size, Color color) {
+		return new CornerGapBorder(size, color);
+	}
+	
+	public static Border createCornerGapBorder(Color color) {
+		return new CornerGapBorder(1, color);
+	}
+	
 	public static Border createNineSliceBorder(String file, boolean fillCenter) {
 		NineSliceBorder border = new NineSliceBorder(Resources.load(file));
 		border.setFillCenter(fillCenter);
