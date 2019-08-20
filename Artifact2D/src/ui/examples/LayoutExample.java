@@ -67,7 +67,7 @@ public class LayoutExample extends Game {
 
 	private Panel createBoxPanel(Color color, int gap) {
 		Panel panel = new Panel();
-		panel.setLayout(new VerticalBoxLayout(gap));
+		panel.setLayout(new VerticalBoxLayout(0));
 		panel.setBackground(color);
 		panel.setBorder(createBoxPanelBorder());
 		for (int i = 0; i < 5; i++)
