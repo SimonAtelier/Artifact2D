@@ -5,6 +5,10 @@ import java.awt.image.BufferedImage;
 
 public class BorderFactory {
 
+	public static Border createDashedBorder(Color color) {
+		return new DashedBorder(color);
+	}
+
 	public static Border createBevelBorder(Color light, Color shadow) {
 		return new BevelBorder(light, shadow);
 	}
