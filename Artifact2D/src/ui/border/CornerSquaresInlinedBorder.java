@@ -8,6 +8,12 @@ import java.awt.geom.Rectangle2D;
 
 public class CornerSquaresInlinedBorder extends AbstractBorder {
 
+	private int x;
+	private int y;
+	private int width;
+	private int height;
+	private Graphics2D g2d;
+	
 	private int sizePlusOne;
 	private int sizePlusTwo;
 
@@ -27,7 +33,7 @@ public class CornerSquaresInlinedBorder extends AbstractBorder {
 		sizePlusTwo = squareSize + 2;
 	}
 
-	private void updatePolypon(int x, int y, int width, int height) {
+	private void updatePolypon() {
 		resetPolygon();
 		addPointToPolygon(x + sizePlusOne, y);
 		addPointToPolygon(x + width - sizePlusTwo, y);
@@ -51,15 +57,15 @@ public class CornerSquaresInlinedBorder extends AbstractBorder {
 		polygon.addPoint(x, y);
 	}
 
-	private void updateRectangle(int x, int y, int width, int height) {
-		x += sizePlusTwo;
-		y += sizePlusTwo;
-		width -= (squareSize + squareSize + 4);
-		height -= (squareSize + squareSize + 4);
+	private void updateRectangle() {
+		int x = this.x + sizePlusTwo;
+		int y = this.y + sizePlusTwo;
+		int width = this.width - (squareSize + squareSize + 4);
+		int height = this.height - (squareSize + squareSize + 4);
 		rectangle.setRect(x, y, width, height);
 	}
 
-	private void renderArea(Graphics2D g2d, int x, int y, int width, int height) {
+	private void renderArea() {
 		Area area = new Area(polygon);
 		Area area2 = new Area(rectangle);
 		area.subtract(area2);
@@ -67,12 +73,12 @@ public class CornerSquaresInlinedBorder extends AbstractBorder {
 		g2d.fill(area);
 	}
 
-	private void renderPolygon(Graphics2D g2d, int x, int y, int width, int height) {
+	private void renderPolygon() {
 		g2d.setColor(color);
 		g2d.draw(polygon);
 	}
 
-	private void renderCornerRectangles(Graphics2D g2d, int x, int y, int width, int height) {
+	private void renderCornerRectangles() {
 		g2d.drawRect(x, y, squareSize - 1, squareSize - 1);
 		g2d.drawRect(x + width - squareSize, y, squareSize - 1, squareSize - 1);
 		g2d.drawRect(x + width - squareSize, y + height - squareSize, squareSize - 1, squareSize - 1);
@@ -81,16 +87,29 @@ public class CornerSquaresInlinedBorder extends AbstractBorder {
 
 	@Override
 	public void renderBorder(Graphics2D g2d, int x, int y, int width, int height) {
-		updatePolypon(x, y, width, height);
-		updateRectangle(x, y, width, height);
-		renderArea(g2d, x, y, width, height);
-		renderPolygon(g2d, x, y, width, height);
-		renderCornerRectangles(g2d, x, y, width, height);
+		setBorderFrame(x, y, width, height);
+		setGraphicsContext(g2d);
+		updatePolypon();
+		updateRectangle();
+		renderArea();
+		renderPolygon();
+		renderCornerRectangles();
 	}
 
 	@Override
 	public Insets getInsets() {
 		return new Insets(squareSize + 2, squareSize + 2, squareSize + 2, squareSize + 2);
+	}
+	
+	private void setBorderFrame(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+	
+	private void setGraphicsContext(Graphics2D g2d) {
+		this.g2d = g2d;
 	}
 
 }
