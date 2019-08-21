@@ -28,19 +28,27 @@ public class CornerSquaresInlinedBorder extends AbstractBorder {
 	}
 
 	private void updatePolypon(int x, int y, int width, int height) {
+		resetPolygon();
+		addPointToPolygon(x + sizePlusOne, y);
+		addPointToPolygon(x + width - sizePlusTwo, y);
+		addPointToPolygon(x + width - sizePlusTwo, y + sizePlusOne);
+		addPointToPolygon(x + width - 1, y + sizePlusOne);
+		addPointToPolygon(x + width - 1, y + height - sizePlusTwo);
+		addPointToPolygon(x + width - sizePlusTwo, y + height - sizePlusTwo);
+		addPointToPolygon(x + width - sizePlusTwo, y + height - 1);
+		addPointToPolygon(x + sizePlusOne, y + height - 1);
+		addPointToPolygon(x + sizePlusOne, y + height - sizePlusTwo);
+		addPointToPolygon(x, y + height - sizePlusTwo);
+		addPointToPolygon(x, y + sizePlusOne);
+		addPointToPolygon(x + sizePlusOne, y + sizePlusOne);
+	}
+	
+	private void resetPolygon() {
 		polygon.reset();
-		polygon.addPoint(x + sizePlusOne, y);
-		polygon.addPoint(x + width - sizePlusTwo, y);
-		polygon.addPoint(x + width - sizePlusTwo, y + sizePlusOne);
-		polygon.addPoint(x + width - 1, y + sizePlusOne);
-		polygon.addPoint(x + width - 1, y + height - sizePlusTwo);
-		polygon.addPoint(x + width - sizePlusTwo, y + height - sizePlusTwo);
-		polygon.addPoint(x + width - sizePlusTwo, y + height - 1);
-		polygon.addPoint(x + sizePlusOne, y + height - 1);
-		polygon.addPoint(x + sizePlusOne, y + height - sizePlusTwo);
-		polygon.addPoint(x, y + height - sizePlusTwo);
-		polygon.addPoint(x, y + sizePlusOne);
-		polygon.addPoint(x + sizePlusOne, y + sizePlusOne);
+	}
+	
+	private void addPointToPolygon(int x, int y) {
+		polygon.addPoint(x, y);
 	}
 
 	private void updateRectangle(int x, int y, int width, int height) {
