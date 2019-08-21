@@ -85,8 +85,8 @@ public class UiElement {
 		if (!visible)
 			return;
 		renderBackground(g2d);
-		renderChildren(g2d);
 		renderBorder(g2d);
+		renderChildren(g2d);
 	}
 
 	public void add(UiElement uiElement) {
