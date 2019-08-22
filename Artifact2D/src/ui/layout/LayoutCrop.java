@@ -2,7 +2,7 @@ package ui.layout;
 
 import ui.UiElement;
 
-public class Crop {
+public class LayoutCrop {
 
 	public void crop(UiElement uiElement) {
 		if (uiElement.isRoot())
