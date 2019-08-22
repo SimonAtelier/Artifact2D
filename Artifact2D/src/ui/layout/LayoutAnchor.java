@@ -78,7 +78,7 @@ public class LayoutAnchor {
 			break;
 		}
 	}
-
+	
 	private void setUiElement(UiElement uiElement) {
 		this.uiElement = uiElement;
 	}
@@ -212,6 +212,10 @@ public class LayoutAnchor {
 		setToParentInnerCoordinates();
 		setToParentInnerWidth();
 		setToParentInnerHeight();
+	}
+	
+	public Anchor getAnchor() {
+		return anchor;
 	}
 	
 	public void setAnchor(Anchor anchor) {

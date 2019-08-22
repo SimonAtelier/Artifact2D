@@ -11,6 +11,7 @@ import ui.event.MouseListener;
 import ui.layout.Anchor;
 import ui.layout.Layout;
 import ui.layout.LayoutAnchor;
+import ui.layout.LayoutMargin;
 
 public class UiElement {
 
@@ -23,8 +24,10 @@ public class UiElement {
 	private Color background;
 	private Color foreground;
 	private Border border;
+	private Insets margin;
 	private Layout layout;
-	private LayoutAnchor layoutAnchor;
+	private LayoutAnchor anchor;
+	private LayoutMargin layoutMargin;
 	private UiElement parent;
 	private List<UiElement> children;
 	private List<MouseListener> listeners;
@@ -36,32 +39,40 @@ public class UiElement {
 		foreground = Color.WHITE;
 		children = new ArrayList<UiElement>();
 		listeners = new ArrayList<MouseListener>();
-		layoutAnchor = new LayoutAnchor(Anchor.NONE);
+		margin = new Insets(0, 0, 0, 0);
+		layoutMargin = new LayoutMargin();
+		anchor = new LayoutAnchor(Anchor.TOP_LEFT);
 	}
 
-	public void relayout() {
-		layout();
-		if (parent != null)
-			parent.relayout();
-		else
-			layout();
+	public UiElement getRoot() {
+		if (parent == null)
+			return this;
+		return parent.getRoot();
 	}
-
-	public void layout() {
+	
+	protected void layout() {
+		anchor();
+		margin();
 		layoutChildren();
-		if (layoutAnchor != null)
-			layoutAnchor.anchor(this);
 		if (layout != null)
 			layout.layout(this);
 	}
-
+	
+	protected void margin() {
+		layoutMargin.applyMargin(this);
+	}
+	
+	protected void anchor() {
+		anchor.anchor(this);
+	}
+	
 	protected void layoutChildren() {
 		for (int i = 0; i < children.size(); i++) {
 			UiElement child = children.get(i);
 			child.layout();
 		}
 	}
-
+	
 	protected void renderBackground(Graphics2D g2d) {
 		if (!opaque)
 			return;
@@ -94,7 +105,7 @@ public class UiElement {
 			return;
 		children.add(uiElement);
 		uiElement.setParent(this);
-		relayout();
+		layout();
 	}
 
 	public void addMouseListener(MouseListener listener) {
@@ -111,6 +122,10 @@ public class UiElement {
 
 	public boolean contains(int x, int y) {
 		return x >= getX() && x < (getX() + getWidth()) && y >= getY() && y < (getY() + getHeight());
+	}
+	
+	public void setLayoutAnchor(Anchor anchor) {
+		this.anchor.setAnchor(anchor);
 	}
 
 	public int getChildCount() {
@@ -221,20 +236,47 @@ public class UiElement {
 		this.border = border;
 	}
 
-	public void setLayout(Layout layout) {
-		this.layout = layout;
-	}
-
-	public void setLayoutAnchor(Anchor anchor) {
-		layoutAnchor.setAnchor(anchor);
-	}
-
 	public UiElement getParent() {
 		return parent;
 	}
 
 	public void setParent(UiElement parent) {
 		this.parent = parent;
+	}
+
+	public Insets getMargin() {
+		return margin;
+	}
+
+	public void setMargin(Insets margin) {
+		this.margin = margin;
+	}
+	
+	public void setMargin(int margin) {
+		setMargin(margin, margin, margin, margin);
+	}
+	
+	public void setMargin(int top, int bottom, int left, int right) {
+		this.margin.top = top;
+		this.margin.bottom = bottom;
+		this.margin.left = left;
+		this.margin.right = right;
+	}
+	
+	public int getMarginLeft() {
+		return margin.left;
+	}
+	
+	public void setMarginLeft(int margin) {
+		this.margin.left = margin;
+	}
+	
+	public Anchor getAnchor() {
+		return anchor.getAnchor();
+	}
+	
+	public void setLayout(Layout layout) {
+		this.layout = layout;
 	}
 
 }
