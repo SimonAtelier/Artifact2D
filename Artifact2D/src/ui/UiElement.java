@@ -9,7 +9,7 @@ import ui.border.Border;
 import ui.border.Insets;
 import ui.event.MouseListener;
 import ui.layout.Anchor;
-import ui.layout.Crop;
+import ui.layout.LayoutCrop;
 import ui.layout.Layout;
 import ui.layout.LayoutAnchor;
 import ui.layout.LayoutMargin;
@@ -29,6 +29,7 @@ public class UiElement {
 	private Layout layout;
 	private LayoutAnchor anchor;
 	private LayoutMargin layoutMargin;
+	private LayoutCrop layoutCrop;
 	private UiElement parent;
 	private List<UiElement> children;
 	private List<MouseListener> listeners;
@@ -42,6 +43,7 @@ public class UiElement {
 		listeners = new ArrayList<MouseListener>();
 		margin = new Insets(0, 0, 0, 0);
 		layoutMargin = new LayoutMargin();
+		layoutCrop = new LayoutCrop();
 		anchor = new LayoutAnchor(Anchor.TOP_LEFT);
 	}
 
@@ -52,12 +54,16 @@ public class UiElement {
 	}
 	
 	protected void layout() {
-		new Crop().crop(this);
+		crop();
 		anchor();
 		margin();
 		layoutChildren();
 		if (layout != null)
 			layout.layout(this);
+	}
+	
+	protected void crop() {
+		layoutCrop.crop(this);
 	}
 	
 	protected void margin() {
