@@ -9,6 +9,7 @@ import ui.border.Border;
 import ui.border.Insets;
 import ui.event.MouseListener;
 import ui.layout.Anchor;
+import ui.layout.Crop;
 import ui.layout.Layout;
 import ui.layout.LayoutAnchor;
 import ui.layout.LayoutMargin;
@@ -51,6 +52,7 @@ public class UiElement {
 	}
 	
 	protected void layout() {
+		new Crop().crop(this);
 		anchor();
 		margin();
 		layoutChildren();
