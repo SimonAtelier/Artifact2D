@@ -15,6 +15,9 @@ public class LayoutMargin {
 
 	private void applyMarginByAnchor() {
 		switch (anchor) {
+		case NONE:
+			applyMarginTopLeft();
+			break;
 		case TOP_LEFT:
 			applyMarginTopLeft();
 			break;
