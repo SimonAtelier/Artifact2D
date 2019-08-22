@@ -5,6 +5,7 @@ import java.awt.Color;
 import game.Game;
 import ui.Panel;
 import ui.UiElement;
+import ui.border.LineBorder;
 import ui.border.MessageBoxBorder;
 import ui.layout.Anchor;
 
@@ -42,6 +43,7 @@ public class AnchorExample extends Game {
 		panel.setHeight(50);
 		panel.setBackground(Color.DARK_GRAY);
 		panel.setBorder(new MessageBoxBorder(Color.LIGHT_GRAY, Color.GRAY));
+		panel.setBorder(new LineBorder(4, Color.YELLOW));
 		return panel;
 	}
 
