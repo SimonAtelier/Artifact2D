@@ -7,185 +7,185 @@ import java.util.List;
 
 import ui.border.Border;
 import ui.border.Insets;
-import ui.event.MouseListener;
 import ui.layout.Anchor;
-import ui.layout.LayoutCrop;
 import ui.layout.Layout;
 import ui.layout.LayoutAnchor;
-import ui.layout.LayoutMargin;
+import ui.layout.NullLayout;
 
 public class UiElement {
 
 	private int x;
 	private int y;
+	private int layoutX;
+	private int layoutY;
+	private int layoutWidth;
+	private int layoutHeight;
 	private int width;
 	private int height;
-	private boolean visible;
 	private boolean opaque;
-	private Color background;
-	private Color foreground;
 	private Border border;
 	private Insets margin;
+	private Insets padding;
+	private Color background;
 	private Layout layout;
-	private LayoutAnchor anchor;
-	private LayoutMargin layoutMargin;
-	private LayoutCrop layoutCrop;
+	private LayoutAnchor layoutAnchor;
 	private UiElement parent;
 	private List<UiElement> children;
-	private List<MouseListener> listeners;
 
 	public UiElement() {
-		visible = true;
 		opaque = true;
+		margin = new Insets();
+		padding = new Insets();
 		background = Color.GRAY;
-		foreground = Color.WHITE;
+		layout = new NullLayout();
+		layoutAnchor = new LayoutAnchor(Anchor.NONE);
 		children = new ArrayList<UiElement>();
-		listeners = new ArrayList<MouseListener>();
-		margin = new Insets(0, 0, 0, 0);
-		layoutMargin = new LayoutMargin();
-		layoutCrop = new LayoutCrop();
-		anchor = new LayoutAnchor(Anchor.TOP_LEFT);
-	}
-
-	public UiElement getRoot() {
-		if (parent == null)
-			return this;
-		return parent.getRoot();
 	}
 	
-	protected void layout() {
-		crop();
-		anchor();
-		margin();
+	private void layout() {
+		getLayout().layout(this);
+		layoutAnchor.anchor(this);
 		layoutChildren();
-		if (layout != null)
-			layout.layout(this);
 	}
 	
-	protected void crop() {
-		layoutCrop.crop(this);
-	}
-	
-	protected void margin() {
-		layoutMargin.applyMargin(this);
-	}
-	
-	protected void anchor() {
-		anchor.anchor(this);
-	}
-	
-	protected void layoutChildren() {
-		for (int i = 0; i < children.size(); i++) {
-			UiElement child = children.get(i);
+	private void layoutChildren() {
+		for (int i = 0; i < getChildCount(); i++) {
+			UiElement child = getChildAt(i);
 			child.layout();
 		}
 	}
-	
+
+	public void render(Graphics2D g2d) {
+		g2d.translate(getLayoutX(), getLayoutY());
+		renderBackground(g2d);
+		renderBorder(g2d);
+		renderContent(g2d);
+		renderChildren(g2d);
+		g2d.translate(-getLayoutX(), -getLayoutY());
+	}
+
 	protected void renderBackground(Graphics2D g2d) {
 		if (!opaque)
 			return;
-		g2d.setColor(background);
-		g2d.fillRect(getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
+		g2d.setColor(getBackground());
+		g2d.fillRect(getContentBoxX(), getContentBoxY(), getContentBoxWidth(), getContentBoxHeight());
 	}
 
-	protected void renderChildren(Graphics2D g2d) {
-		for (int i = 0; i < children.size(); i++) {
-			UiElement child = children.get(i);
-			child.render(g2d);
-		}
+	protected void renderContent(Graphics2D g2d) {
+
 	}
 
 	protected void renderBorder(Graphics2D g2d) {
-		if (border != null)
-			border.renderBorder(g2d, x, y, width, height);
+		if (border == null)
+			return;
+		border.renderBorder(g2d, getBorderBoxX(), getBorderBoxY(), getBorderBoxWidth(), getBorderBoxHeight());
 	}
 
-	public void render(Graphics2D g2d) {
-		if (!visible)
-			return;
-		renderBackground(g2d);
-		renderBorder(g2d);
-		renderChildren(g2d);
+	protected void renderChildren(Graphics2D g2d) {
+		g2d.translate(getContentX(), getContentY());
+
+		for (int i = 0; i < getChildCount(); i++) {
+			UiElement child = getChildAt(i);
+			child.render(g2d);
+		}
+
+		g2d.translate(-getContentX(), -getContentY());
 	}
 
 	public void add(UiElement uiElement) {
 		if (uiElement == null)
 			return;
-		children.add(uiElement);
 		uiElement.setParent(this);
+		children.add(uiElement);
 		layout();
-	}
-
-	public void addMouseListener(MouseListener listener) {
-		if (listener == null)
-			return;
-		listeners.add(listener);
-	}
-
-	public void removeMouseListener(MouseListener listener) {
-		if (listener == null)
-			return;
-		listeners.remove(listener);
-	}
-
-	public boolean contains(int x, int y) {
-		return x >= getX() && x < (getX() + getWidth()) && y >= getY() && y < (getY() + getHeight());
 	}
 	
 	public void setLayoutAnchor(Anchor anchor) {
-		this.anchor.setAnchor(anchor);
+		layoutAnchor.setAnchor(anchor);
 	}
-
+	
+	public boolean isRoot() {
+		return getParent() == null;
+	}
+	
+	public UiElement getParent() {
+		return parent;
+	}
+	
+	protected void setParent(UiElement parent) {
+		this.parent = parent;
+	}
+	
 	public int getChildCount() {
 		return children.size();
 	}
-
+	
 	public UiElement getChildAt(int index) {
 		return children.get(index);
 	}
 
-	public boolean isRoot() {
-		return parent == null;
+	public int getContentX() {
+		return x + getMarginLeft() + getBorderInsets().left + padding.left;
 	}
 
-	public Insets getInsets() {
-		if (border != null)
-			return border.getInsets();
-		return new Insets(0, 0, 0, 0);
+	public int getContentY() {
+		return y + getMarginTop() + getBorderInsets().top + padding.top;
 	}
 
-	public int getInnerX() {
-		return getX() + getInsets().left;
+	public int getBorderBoxX() {
+		return x + getMarginLeft();
 	}
 
-	public int getInnerY() {
-		return getY() + getInsets().top;
+	public int getBorderBoxY() {
+		return y + getMarginTop();
 	}
 
-	public int getInnerWidth() {
-		Insets insets = getInsets();
-		return getWidth() - insets.left - insets.right;
+	public int getBorderBoxWidth() {
+		int width = getWidth();
+		Insets borderInsets = getBorderInsets();
+		width += borderInsets.getHorizontalInsets();
+		width += padding.getHorizontalInsets();
+		width += layoutWidth;
+		return width;
 	}
 
-	public int getInnerHeight() {
-		Insets insets = getInsets();
-		return getHeight() - insets.top - insets.bottom;
+	public int getBorderBoxHeight() {
+		int height = getHeight();
+		Insets borderInsets = getBorderInsets();
+		height += borderInsets.getVerticalInsets();
+		height += padding.getVerticalInsets();
+		height += getLayoutHeight();
+		return height;
 	}
 
-	public int getX() {
-		return x;
+	public int getContentBoxX() {
+		return getMarginLeft() + getBorderInsets().left;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public int getContentBoxY() {
+		return getMarginTop() + getBorderInsets().top;
 	}
 
-	public int getY() {
-		return y;
+	public int getContentBoxWidth() {
+		return getWidth() + getLayoutWidth() + getHorizontalPadding();
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public int getContentBoxHeight() {
+		return getHeight() + getLayoutHeight() + getVerticalPadding();
+	}
+	
+	public int getContentWidth() {
+		return getWidth() + getLayoutWidth();
+	}
+	
+	public int getContentHeight() {
+		return getHeight() + getLayoutHeight();
+	}
+
+	public Insets getBorderInsets() {
+		if (border == null)
+			return new Insets();
+		return border.getInsets();
 	}
 
 	public int getWidth() {
@@ -204,20 +204,68 @@ public class UiElement {
 		this.height = height;
 	}
 
-	public boolean isVisible() {
-		return visible;
+	public Border getBorder() {
+		return border;
 	}
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public void setBorder(Border border) {
+		this.border = border;
+	}
+	
+	public int getHorizontalPadding() {
+		return padding.getHorizontalInsets();
+	}
+	
+	public int getVerticalPadding() {
+		return padding.getVerticalInsets();
 	}
 
-	public boolean isOpaque() {
-		return opaque;
+	public Insets getMargin() {
+		return margin;
+	}
+	
+	public int getMarginLeft() {
+		return margin.left;
+	}
+	
+	public void setMarginLeft(int marginLeft) {
+		margin.left = marginLeft;
+	}
+	
+	public int getMarginRight() {
+		return margin.right;
+	}
+	
+	public void setMarginRight(int marginRight) {
+		margin.right = marginRight;
+	}
+	
+	public int getMarginTop() {
+		return margin.top;
+	}
+	
+	public void setMarginTop(int marginTop) {
+		margin.top = marginTop;
+	}
+	
+	public int getMarginBottom() {
+		return margin.bottom;
+	}
+	
+	public void setMarginBottom(int marginBottom) {
+		margin.bottom = marginBottom;
 	}
 
-	public void setOpaque(boolean opaque) {
-		this.opaque = opaque;
+	public void setMargin(int margin) {
+		this.margin.set(margin);
+	}
+
+	public Insets getPadding() {
+		return padding;
+	}
+
+	public void setPadding(int padding) {
+		this.padding.set(padding);
 	}
 
 	public Color getBackground() {
@@ -228,63 +276,57 @@ public class UiElement {
 		this.background = background;
 	}
 
-	public Color getForeground() {
-		return foreground;
+	public int getLayoutX() {
+		return layoutX;
 	}
 
-	public void setForeground(Color foreground) {
-		this.foreground = foreground;
+	public void setLayoutX(int layoutX) {
+		this.layoutX = layoutX;
 	}
 
-	public Border getBorder() {
-		return border;
+	public int getLayoutY() {
+		return layoutY;
 	}
 
-	public void setBorder(Border border) {
-		this.border = border;
+	public void setLayoutY(int layoutY) {
+		this.layoutY = layoutY;
 	}
 
-	public UiElement getParent() {
-		return parent;
+	public int getLayoutWidth() {
+		return layoutWidth;
 	}
 
-	public void setParent(UiElement parent) {
-		this.parent = parent;
+	public void setLayoutWidth(int layoutWidth) {
+		this.layoutWidth = layoutWidth;
 	}
 
-	public Insets getMargin() {
-		return margin;
+	public int getLayoutHeight() {
+		return layoutHeight;
 	}
 
-	public void setMargin(Insets margin) {
-		this.margin = margin;
+	public void setLayoutHeight(int layoutHeight) {
+		this.layoutHeight = layoutHeight;
 	}
-	
-	public void setMargin(int margin) {
-		setMargin(margin, margin, margin, margin);
+
+	public Layout getLayout() {
+		return layout;
 	}
-	
-	public void setMargin(int top, int bottom, int left, int right) {
-		this.margin.top = top;
-		this.margin.bottom = bottom;
-		this.margin.left = left;
-		this.margin.right = right;
-	}
-	
-	public int getMarginLeft() {
-		return margin.left;
-	}
-	
-	public void setMarginLeft(int margin) {
-		this.margin.left = margin;
-	}
-	
-	public Anchor getAnchor() {
-		return anchor.getAnchor();
-	}
-	
+
 	public void setLayout(Layout layout) {
-		this.layout = layout;
+		if (layout == null) {
+			this.layout = new NullLayout();
+		} else {
+			this.layout = layout;
+		}	
+		layout();
+	}
+
+	public boolean isOpaque() {
+		return opaque;
+	}
+
+	public void setOpaque(boolean opaque) {
+		this.opaque = opaque;
 	}
 
 }

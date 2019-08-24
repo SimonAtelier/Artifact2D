@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -10,10 +10,10 @@ import ui.Panel;
 import ui.border.NineSliceBorder;
 import ui.layout.Anchor;
 
-public class NineSliceBorderExample extends Game {
+public class NineSliceBorderTest extends Game {
 
 	public static void main(String[] args) {
-		NineSliceBorderExample game = new NineSliceBorderExample();
+		NineSliceBorderTest game = new NineSliceBorderTest();
 		game.setSize(480, 270, 3);
 		game.start();
 	}
@@ -31,8 +31,6 @@ public class NineSliceBorderExample extends Game {
 		panel.setBackground(Color.WHITE);
 		panel.setLayoutAnchor(Anchor.CENTER);
 
-		getUiRoot().setOpaque(true);
-		getUiRoot().setBackground(Color.DARK_GRAY);
 		getUiRoot().add(panel);
 	}
 	

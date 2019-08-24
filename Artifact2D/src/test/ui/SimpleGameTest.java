@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui;
 
 import java.awt.Color;
 
@@ -8,10 +8,10 @@ import ui.border.CornerSquaresBorder;
 import ui.border.MessageBoxBorder;
 import ui.layout.Anchor;
 
-public class SimpleGameExample extends Game {
+public class SimpleGameTest extends Game {
 
 	public static void main(String[] args) {
-		SimpleGameExample game = new SimpleGameExample();
+		SimpleGameTest game = new SimpleGameTest();
 		game.setSize(480, 270, 3);
 		game.setTitle("My Game");
 		game.start();
@@ -29,6 +29,8 @@ public class SimpleGameExample extends Game {
 		UiElement uiRoot = getUiRoot();
 		uiRoot.setBorder(new CornerSquaresBorder(5, Color.LIGHT_GRAY));
 		uiRoot.add(uiElement);
+		uiRoot.setWidth(470);
+		uiRoot.setHeight(260);
 	}
 
 }

@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui.anchor;
 
 import java.awt.Color;
 
@@ -6,14 +6,13 @@ import game.Game;
 import ui.Panel;
 import ui.UiElement;
 import ui.border.LineBorder;
-import ui.border.MessageBoxBorder;
 import ui.layout.Anchor;
 
-public class AnchorExample extends Game {
+public class CardinalAnchorsTest extends Game {
 
 	public static void main(String[] args) {
-		AnchorExample game = new AnchorExample();
-		game.setSize(480, 240, 3);
+		CardinalAnchorsTest game = new CardinalAnchorsTest();
+		game.setSize(480, 270, 3);
 		game.start();
 	}
 	
@@ -42,7 +41,6 @@ public class AnchorExample extends Game {
 		panel.setWidth(100);
 		panel.setHeight(50);
 		panel.setBackground(Color.DARK_GRAY);
-		panel.setBorder(new MessageBoxBorder(Color.LIGHT_GRAY, Color.GRAY));
 		panel.setBorder(new LineBorder(4, Color.YELLOW));
 		return panel;
 	}

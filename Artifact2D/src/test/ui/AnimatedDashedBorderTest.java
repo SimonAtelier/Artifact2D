@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui;
 
 import java.awt.Color;
 
@@ -7,11 +7,11 @@ import ui.Panel;
 import ui.border.DashedBorder;
 import ui.layout.Anchor;
 
-public class DashedBorderExample extends Game {
+public class AnimatedDashedBorderTest extends Game {
 
 	public static void main(String[] args) {
-		DashedBorderExample game = new DashedBorderExample();
-		game.setSize(480, 240, 3);
+		AnimatedDashedBorderTest game = new AnimatedDashedBorderTest();
+		game.setSize(480, 270, 3);
 		game.start();
 	}
 	

@@ -1,13 +1,11 @@
 package ui.layout;
 
 import ui.UiElement;
-import ui.border.Insets;
 
 public class LayoutAnchor {
 
 	private UiElement uiElement;
 	private UiElement parent;
-	private Insets insets;
 	private Anchor anchor;
 
 	public LayoutAnchor(Anchor anchor) {
@@ -20,12 +18,17 @@ public class LayoutAnchor {
 
 		setUiElement(uiElement);
 		setParent(uiElement.getParent());
-		setInsetsFromParent();
 		layoutByAnchor();
 	}
 
 	private void layoutByAnchor() {
 		switch (anchor) {
+		case VERTICAL_WIDE:
+			anchorVerticalWide();
+			break;
+		case HORIZONTAL_WIDE:
+			anchorHorizontalWide();
+			break;
 		case TOP_LEFT:
 			layoutTopLeft();
 			break;
@@ -78,17 +81,13 @@ public class LayoutAnchor {
 			break;
 		}
 	}
-	
+
 	private void setUiElement(UiElement uiElement) {
 		this.uiElement = uiElement;
 	}
 
 	private void setParent(UiElement parent) {
 		this.parent = parent;
-	}
-	
-	private void setInsetsFromParent() {
-		insets = parent.getInsets();
 	}
 
 	private void setToParentInnerCoordinates() {
@@ -97,37 +96,57 @@ public class LayoutAnchor {
 	}
 
 	private void setToParentInnerX() {
-		uiElement.setX(parent.getInnerX());
+		uiElement.setLayoutX(0);
 	}
 
 	private void setToParentInnerY() {
-		uiElement.setY(parent.getInnerY());
+		uiElement.setLayoutY(0);
 	}
 
 	private void setToParentInnerWidth() {
-		uiElement.setWidth(parent.getInnerWidth());
+		int parentWidth = parent.getContentWidth();
+		int childWidth = uiElement.getBorderBoxWidth();
+		int layoutWidth = parentWidth - childWidth;
+		uiElement.setLayoutWidth(layoutWidth);
 	}
 
 	private void setToParentInnerHeight() {
-		uiElement.setHeight(parent.getInnerHeight());
-	}
-
-	private void centerVertical() {
-		int offsetX = (parent.getInnerWidth() - uiElement.getWidth()) / 2;
-		uiElement.setX(parent.getX() + insets.left + offsetX);
+		int parentHeight = parent.getContentHeight();
+		int childHeight = uiElement.getBorderBoxHeight();
+		int layoutHeight = parentHeight - childHeight;
+		uiElement.setLayoutHeight(layoutHeight);
 	}
 
 	private void centerHorizontal() {
-		int offsetY = (parent.getInnerHeight() - uiElement.getHeight()) / 2;
-		uiElement.setY(parent.getY() + insets.top + offsetY);
+		int parentWidth = parent.getWidth() + parent.getLayoutWidth();
+		int offsetX = Math.abs(parentWidth - uiElement.getBorderBoxWidth()) / 2;
+		uiElement.setLayoutX(offsetX);
+	}
+
+	private void centerVertical() {
+		int parentHeight = parent.getHeight() + parent.getLayoutHeight();
+		int offsetY = Math.abs(parentHeight - uiElement.getBorderBoxHeight()) / 2;
+		uiElement.setLayoutY(offsetY);
+	}
+	
+	private void anchorHorizontalWide() {
+		setToParentInnerWidth();
+	}
+	
+	private void anchorVerticalWide() {
+		setToParentInnerHeight();
 	}
 
 	private void anchorRight() {
-		uiElement.setX(parent.getX() + parent.getWidth() - uiElement.getWidth() - insets.right);
+		int offset = (parent.getWidth() + parent.getLayoutWidth());
+		offset -= uiElement.getBorderBoxWidth();
+		uiElement.setLayoutX(offset);
 	}
 
 	private void anchorBottom() {
-		uiElement.setY(parent.getY() + parent.getHeight() - uiElement.getHeight() - insets.bottom);
+		int offset = (parent.getHeight() + parent.getLayoutHeight());
+		offset -= uiElement.getBorderBoxHeight();
+		uiElement.setLayoutY(offset);
 	}
 
 	private void layoutTopLeft() {
@@ -151,21 +170,21 @@ public class LayoutAnchor {
 
 	private void layoutCenterLeft() {
 		setToParentInnerX();
-		centerHorizontal();
+		centerVertical();
 	}
 
 	private void layoutCenterTop() {
 		setToParentInnerY();
-		centerVertical();
+		centerHorizontal();
 	}
 
 	private void layoutCenterRight() {
-		centerHorizontal();
+		centerVertical();
 		anchorRight();
 	}
 
 	private void layoutCenterBottom() {
-		centerVertical();
+		centerHorizontal();
 		anchorBottom();
 	}
 
@@ -197,7 +216,7 @@ public class LayoutAnchor {
 	}
 
 	private void layoutVerticalCenterWide() {
-		centerVertical();
+		centerHorizontal();
 		setToParentInnerY();
 		setToParentInnerHeight();
 	}
@@ -205,7 +224,7 @@ public class LayoutAnchor {
 	private void layoutHorizontalCenterWide() {
 		setToParentInnerX();
 		setToParentInnerWidth();
-		centerHorizontal();
+		centerVertical();
 	}
 
 	private void layoutFullRectangle() {
@@ -213,11 +232,11 @@ public class LayoutAnchor {
 		setToParentInnerWidth();
 		setToParentInnerHeight();
 	}
-	
+
 	public Anchor getAnchor() {
 		return anchor;
 	}
-	
+
 	public void setAnchor(Anchor anchor) {
 		this.anchor = anchor;
 	}

@@ -6,6 +6,10 @@ import java.awt.image.BufferedImage;
 import game.Resources;
 
 public class BorderFactory {
+	
+	public static Border createRoundLineBorder(Color color) {
+		return new RoundLineBorder(color);
+	}
 
 	public static Border createColoredCornersBorder(int size, Color color, Color cornerColor) {
 		return new ColoredCornersBorder(size, color, cornerColor);
@@ -39,7 +43,7 @@ public class BorderFactory {
 		return border;
 	}
 	
-	public static Border createNineBorder(BufferedImage image) {
+	public static Border createNineSliceBorder(BufferedImage image) {
 		return createNineSliceBorder(image, false);
 	}
 	
@@ -93,10 +97,6 @@ public class BorderFactory {
 
 	public static Border createMessageBoxBorder(Color outerColor, Color innerColor) {
 		return new MessageBoxBorder(outerColor, innerColor);
-	}
-
-	public static Border createNineSliceBorder(BufferedImage image) {
-		return new NineSliceBorder(image);
 	}
 
 	public static Border createRaisedEtchedBorder(Color lightColor, Color darkColor) {

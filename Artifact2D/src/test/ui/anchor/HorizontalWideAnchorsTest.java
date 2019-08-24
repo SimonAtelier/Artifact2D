@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui.anchor;
 
 import java.awt.Color;
 
@@ -8,21 +8,19 @@ import ui.UiElement;
 import ui.border.LineBorder;
 import ui.layout.Anchor;
 
-public class WideAnchorExample extends Game {
+public class HorizontalWideAnchorsTest extends Game {
 
 	public static void main(String[] args) {
-		WideAnchorExample game = new WideAnchorExample();
+		HorizontalWideAnchorsTest game = new HorizontalWideAnchorsTest();
 		game.setSize(480, 270, 3);
 		game.start();
 	}
 
 	@Override
 	public void onInitialize() {
-		addPanel(Anchor.BOTTOM_WIDE);
 		addPanel(Anchor.TOP_WIDE);
 		addPanel(Anchor.HORIZONTAL_CENTER_WIDE);
-		addPanel(Anchor.LEFT_WIDE);
-		addPanel(Anchor.RIGHT_WIDE);
+		addPanel(Anchor.BOTTOM_WIDE);
 	}
 	
 	private void addPanel(Anchor anchor) {
@@ -37,7 +35,7 @@ public class WideAnchorExample extends Game {
 		panel.setWidth(100);
 		panel.setHeight(50);
 		panel.setBackground(Color.DARK_GRAY);
-		panel.setBorder(new LineBorder(1, Color.WHITE));
+		panel.setBorder(new LineBorder(2, Color.YELLOW));
 		return panel;
 	}
 

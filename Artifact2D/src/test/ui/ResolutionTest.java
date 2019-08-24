@@ -1,4 +1,4 @@
-package ui.examples;
+package test.ui;
 
 import game.Game;
 import game.Resolution;
