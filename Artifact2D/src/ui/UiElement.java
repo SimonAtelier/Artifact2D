@@ -37,6 +37,7 @@ public class UiElement {
 		opaque = true;
 		margin = new Insets();
 		padding = new Insets();
+		foreground = Color.BLACK;
 		background = Color.GRAY;
 		layout = new NullLayout();
 		layoutAnchor = new LayoutAnchor(Anchor.NONE);
