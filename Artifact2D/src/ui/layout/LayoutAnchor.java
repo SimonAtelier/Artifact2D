@@ -140,13 +140,13 @@ public class LayoutAnchor {
 	private void anchorRight() {
 		int offset = (parent.getWidth() + parent.getLayoutWidth());
 		offset -= uiElement.getBorderBoxWidth();
-		uiElement.setLayoutX(offset);
+		uiElement.setLayoutX(offset - uiElement.getMargin().right);
 	}
 
 	private void anchorBottom() {
 		int offset = (parent.getHeight() + parent.getLayoutHeight());
 		offset -= uiElement.getBorderBoxHeight();
-		uiElement.setLayoutY(offset);
+		uiElement.setLayoutY(offset - uiElement.getMargin().bottom);
 	}
 
 	private void layoutTopLeft() {
