@@ -26,6 +26,7 @@ public class UiElement {
 	private Border border;
 	private Insets margin;
 	private Insets padding;
+	private Color foreground;
 	private Color background;
 	private Layout layout;
 	private LayoutAnchor layoutAnchor;
@@ -266,6 +267,14 @@ public class UiElement {
 
 	public void setPadding(int padding) {
 		this.padding.set(padding);
+	}
+
+	public Color getForeground() {
+		return foreground;
+	}
+
+	public void setForeground(Color foreground) {
+		this.foreground = foreground;
 	}
 
 	public Color getBackground() {
