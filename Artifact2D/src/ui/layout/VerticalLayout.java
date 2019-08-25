@@ -51,15 +51,7 @@ public class VerticalLayout implements Layout {
 	}
 	
 	private void applyLayoutDimensionToParent() {
-		applyLayoutWidthToParent();
-		applyLayoutHeightToParent();
-	}
-
-	private void applyLayoutWidthToParent() {
 		setParentLayoutWidth(calculateLayoutWidth());
-	}
-
-	private void applyLayoutHeightToParent() {
 		setParentLayoutHeight(calculateLayoutHeight());
 	}
 	
