@@ -6,10 +6,11 @@ public class GridLayout implements Layout {
 
 	private int rows;
 	private int cols;
-	private int vGap;
-	private int hGap;
+	private int layoutY;
+	private int layoutX;
 	private int maxRowWidth;
 	private int maxRowHeight;
+	private UiElement parent;
 
 	public GridLayout(int rows, int cols) {
 		this.rows = rows;
@@ -17,12 +18,13 @@ public class GridLayout implements Layout {
 	}
 
 	private void reset() {
-		maxRowWidth = maxRowHeight = vGap = hGap = 0;
+		maxRowWidth = maxRowHeight = layoutY = layoutX = 0;
 	}
 
 	@Override
 	public void layout(UiElement uiElement) {
 		reset();
+		setUiElement(uiElement);
 		
 		int childIndex = 0;
 		for (int row = 0; row < rows; row++) {
@@ -30,17 +32,17 @@ public class GridLayout implements Layout {
 				if (childIndex >= uiElement.getChildCount())
 					break;
 				UiElement child = uiElement.getChildAt(childIndex);
-				child.setLayoutX(hGap);
-				child.setLayoutY(vGap);
+				child.setLayoutX(layoutX);
+				child.setLayoutY(layoutY);
 				childIndex++;
 				int childWidth = child.getBorderBoxWidth() + child.getMargin().getHorizontalInsets();
 				int childHeight = child.getBorderBoxHeight() + child.getMargin().getVerticalInsets();
-				hGap += childWidth;
+				layoutX += childWidth;
 				maxRowHeight = childHeight > maxRowHeight ? childHeight : maxRowHeight;
 			}
-			maxRowWidth = hGap > maxRowWidth ? hGap : maxRowWidth;
-			hGap = 0;
-			vGap += maxRowHeight;
+			maxRowWidth = layoutX > maxRowWidth ? layoutX : maxRowWidth;
+			layoutX = 0;
+			layoutY += maxRowHeight;
 		}
 
 		if (maxRowWidth > uiElement.getWidth()) {
@@ -49,12 +51,16 @@ public class GridLayout implements Layout {
 			uiElement.setLayoutWidth(0);
 		}
 
-		if (vGap > uiElement.getHeight()) {
-			uiElement.setLayoutHeight(vGap - uiElement.getHeight());
+		if (layoutY > uiElement.getHeight()) {
+			uiElement.setLayoutHeight(layoutY - uiElement.getHeight());
 		} else {
 			uiElement.setLayoutHeight(0);
 		}
 
+	}
+	
+	private void setUiElement(UiElement parent) {
+		this.parent = parent;
 	}
 
 }
