@@ -6,11 +6,11 @@ public class GridLayout implements Layout {
 
 	private int rows;
 	private int cols;
-	private int layoutY;
 	private int layoutX;
-	private int minimumHeight;
+	private int layoutY;
 	private int maxRowWidth;
 	private int maxRowHeight;
+	private int minimumHeight;
 	private UiElement parent;
 	private UiElement child;
 
