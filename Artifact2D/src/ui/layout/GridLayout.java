@@ -25,7 +25,7 @@ public class GridLayout implements Layout {
 	public void layout(UiElement uiElement) {
 		reset();
 		setUiElement(uiElement);
-		
+
 		int childIndex = 0;
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
@@ -45,20 +45,23 @@ public class GridLayout implements Layout {
 			layoutY += maxRowHeight;
 		}
 
-		if (maxRowWidth > uiElement.getWidth()) {
-			uiElement.setLayoutWidth(maxRowWidth - uiElement.getWidth());
-		} else {
-			uiElement.setLayoutWidth(0);
-		}
-
-		if (layoutY > uiElement.getHeight()) {
-			uiElement.setLayoutHeight(layoutY - uiElement.getHeight());
-		} else {
-			uiElement.setLayoutHeight(0);
-		}
-
+		applyLayoutDimension();
 	}
-	
+
+	private void applyLayoutDimension() {
+		if (maxRowWidth > parent.getWidth()) {
+			parent.setLayoutWidth(maxRowWidth - parent.getWidth());
+		} else {
+			parent.setLayoutWidth(0);
+		}
+
+		if (layoutY > parent.getHeight()) {
+			parent.setLayoutHeight(layoutY - parent.getHeight());
+		} else {
+			parent.setLayoutHeight(0);
+		}
+	}
+
 	private void setUiElement(UiElement parent) {
 		this.parent = parent;
 	}
