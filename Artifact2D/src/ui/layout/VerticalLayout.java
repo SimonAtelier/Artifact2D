@@ -24,7 +24,7 @@ public class VerticalLayout extends AbstractAxisLayout {
 	}
 
 	private void updateMinimumHeight() {
-		expandMinimumHeight(getNeededHeightOfChild());
+		expandMinimumHeightBy(getNeededHeightOfChild());
 	}
 
 }

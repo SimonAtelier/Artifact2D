@@ -39,11 +39,11 @@ public abstract class AbstractAxisLayout implements Layout {
 		setLayoutY(0);
 	}
 	
-	protected void expandMinimumWidth(int amount) {
+	protected void expandMinimumWidthBy(int amount) {
 		minimumWidth += amount;
 	}
 	
-	protected void expandMinimumHeight(int amount) {
+	protected void expandMinimumHeightBy(int amount) {
 		minimumHeight += amount;
 	}
 	

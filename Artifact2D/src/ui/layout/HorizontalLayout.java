@@ -18,7 +18,7 @@ public class HorizontalLayout extends AbstractAxisLayout {
 	}
 
 	private void updateMinimumWidth() {
-		expandMinimumWidth(getNeededWidthOfChild());
+		expandMinimumWidthBy(getNeededWidthOfChild());
 	}
 
 	private void updateMinimumHeight() {
