@@ -11,6 +11,7 @@ public class GridLayout implements Layout {
 	private int maxRowWidth;
 	private int maxRowHeight;
 	private UiElement parent;
+	private UiElement child;
 
 	public GridLayout(int rows, int cols) {
 		this.rows = rows;
@@ -25,29 +26,53 @@ public class GridLayout implements Layout {
 	public void layout(UiElement uiElement) {
 		reset();
 		setParent(uiElement);
-
+		layoutChildren();
+		applyLayoutDimensionToParent();
+	}
+	
+	private void layoutChildren() {
 		int childIndex = 0;
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
-				if (childIndex >= uiElement.getChildCount())
+				if (childIndex >= parent.getChildCount())
 					break;
-				UiElement child = uiElement.getChildAt(childIndex);
-				child.setLayoutX(layoutX);
-				child.setLayoutY(layoutY);
+				UiElement child = parent.getChildAt(childIndex);
+				setChild(child);
+				applyLayoutCoordinatesToChild();
 				childIndex++;
-				int childWidth = child.getBorderBoxWidth() + child.getMargin().getHorizontalInsets();
-				int childHeight = child.getBorderBoxHeight() + child.getMargin().getVerticalInsets();
-				layoutX += childWidth;
+				int childWidth = getNeededChildWidth();
+				int childHeight = getNeededChildHeight();
+				translateLayoutX(childWidth);
 				maxRowHeight = childHeight > maxRowHeight ? childHeight : maxRowHeight;
 			}
 			maxRowWidth = layoutX > maxRowWidth ? layoutX : maxRowWidth;
 			layoutX = 0;
-			layoutY += maxRowHeight;
+			translateLayoutY(maxRowHeight);
 		}
-		applyLayoutDimension();
+	}
+	
+	private void translateLayoutX(int amount) {
+		layoutX += amount;
+	}
+	
+	private void translateLayoutY(int amount) {
+		layoutY += amount;
+	}
+	
+	private void applyLayoutCoordinatesToChild() {
+		child.setLayoutX(layoutX);
+		child.setLayoutY(layoutY);
+	}
+	
+	private int getNeededChildWidth() {
+		return child.getBorderBoxWidth() + child.getMargin().getHorizontalInsets();
+	}
+	
+	private int getNeededChildHeight() {
+		return child.getBorderBoxHeight() + child.getMargin().getVerticalInsets();
 	}
 
-	private void applyLayoutDimension() {
+	private void applyLayoutDimensionToParent() {
 		applyLayoutWidth();
 		applyLayoutHeight();
 	}
@@ -64,6 +89,10 @@ public class GridLayout implements Layout {
 
 	private void setParent(UiElement parent) {
 		this.parent = parent;
+	}
+	
+	private void setChild(UiElement child) {
+		this.child = child;
 	}
 
 }
