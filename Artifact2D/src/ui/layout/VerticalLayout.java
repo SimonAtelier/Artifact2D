@@ -1,7 +1,7 @@
 package ui.layout;
 
 public class VerticalLayout extends AbstractAxisLayout {
-
+	
 	@Override
 	protected void updateLayoutCoordinates() {
 		updateLayoutY();

@@ -18,10 +18,6 @@ public class GridLayout implements Layout {
 		this.cols = cols;
 	}
 
-	private void reset() {
-		maxRowWidth = maxRowHeight = layoutY = layoutX = 0;
-	}
-
 	@Override
 	public void layout(UiElement uiElement) {
 		reset();
@@ -29,68 +25,101 @@ public class GridLayout implements Layout {
 		layoutChildren();
 		applyLayoutDimensionToParent();
 	}
-	
+
 	private void layoutChildren() {
 		int childIndex = 0;
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
 				if (childIndex >= parent.getChildCount())
 					break;
-				UiElement child = parent.getChildAt(childIndex);
-				setChild(child);
+				setChild(getParent().getChildAt(childIndex));
 				applyLayoutCoordinatesToChild();
+				translateLayoutX(getNeededWidthOfChild());
+				updateMaxRowHeight();
 				childIndex++;
-				int childWidth = getNeededChildWidth();
-				int childHeight = getNeededChildHeight();
-				translateLayoutX(childWidth);
-				maxRowHeight = childHeight > maxRowHeight ? childHeight : maxRowHeight;
 			}
-			maxRowWidth = layoutX > maxRowWidth ? layoutX : maxRowWidth;
-			layoutX = 0;
+			updateMaxRowWidth();
+			setLayoutX(0);
 			translateLayoutY(maxRowHeight);
 		}
 	}
 	
+	private void updateMaxRowWidth() {
+		maxRowWidth = layoutX > maxRowWidth ? layoutX : maxRowWidth;
+	}
+	
+	private void updateMaxRowHeight() {
+		maxRowHeight = getNeededHeightOfChild() > maxRowHeight ? getNeededHeightOfChild() : maxRowHeight;
+	}
+	
+	private void reset() {
+		maxRowWidth = maxRowHeight = layoutY = layoutX = 0;
+	}
+
 	private void translateLayoutX(int amount) {
 		layoutX += amount;
 	}
-	
+
 	private void translateLayoutY(int amount) {
 		layoutY += amount;
 	}
-	
+
 	private void applyLayoutCoordinatesToChild() {
 		child.setLayoutX(layoutX);
 		child.setLayoutY(layoutY);
-	}
-	
-	private int getNeededChildWidth() {
-		return child.getBorderBoxWidth() + child.getMargin().getHorizontalInsets();
-	}
-	
-	private int getNeededChildHeight() {
-		return child.getBorderBoxHeight() + child.getMargin().getVerticalInsets();
 	}
 
 	private void applyLayoutDimensionToParent() {
 		applyLayoutWidth();
 		applyLayoutHeight();
 	}
-	
+
 	private void applyLayoutWidth() {
 		int layoutWidth = maxRowWidth > parent.getWidth() ? maxRowWidth - parent.getWidth() : 0;
 		parent.setLayoutWidth(layoutWidth);
 	}
-	
+
 	private void applyLayoutHeight() {
 		int layoutHeight = layoutY > parent.getHeight() ? layoutY - parent.getHeight() : 0;
 		parent.setLayoutHeight(layoutHeight);
+	}
+	
+	protected int getNeededWidthOfChild() {
+		return getChildBorderBoxWidth() + getHorizontalChildMargin();
+	}
+	
+	protected int getNeededHeightOfChild() {
+		return getChildBorderBoxHeight() + getVerticalChildMargin();
+	}
+	
+	private int getHorizontalChildMargin() {
+		return child.getMargin().getHorizontalInsets();
+	}
+	
+	private int getVerticalChildMargin() {
+		return child.getMargin().getVerticalInsets();
+	}
+	
+	private int getChildBorderBoxWidth() {
+		return child.getBorderBoxWidth();
+	}
+	
+	private int getChildBorderBoxHeight() {
+		return child.getBorderBoxHeight();
+	}
+	
+	private void setLayoutX(int layoutX) {
+		this.layoutX = layoutX;
+	}
+	
+	private UiElement getParent() {
+		return parent;
 	}
 
 	private void setParent(UiElement parent) {
 		this.parent = parent;
 	}
-	
+
 	private void setChild(UiElement child) {
 		this.child = child;
 	}
