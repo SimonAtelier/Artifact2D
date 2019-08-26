@@ -1,30 +1,20 @@
 package ui.layout;
 
-public class HorizontalLayout extends AbstractAxisLayout {
+import ui.UiElement;
 
+public class HorizontalLayout implements Layout {
+
+	private GridLayout gridLayout;
+	
+	public HorizontalLayout() {
+		gridLayout = new GridLayout(0, 0);
+	}
+	
 	@Override
-	protected void updateLayoutCoordinates() {
-		updateLayoutX();
-	}
-
-	@Override
-	protected void updateMinimumDimension() {
-		updateMinimumWidth();
-		updateMinimumHeight();
-	}
-
-	private void updateLayoutX() {
-		translateLayoutX(getNeededWidthOfChild());
-	}
-
-	private void updateMinimumWidth() {
-		expandMinimumWidthBy(getNeededWidthOfChild());
-	}
-
-	private void updateMinimumHeight() {
-		int childHeight = getNeededHeightOfChild();
-		int minimumHeight = childHeight > getMinimumHeight() ? childHeight : getMinimumHeight();
-		setMinimumHeight(minimumHeight);
+	public void layout(UiElement uiElement) {
+		gridLayout.setRows(1);
+		gridLayout.setCols(uiElement.getChildCount());
+		gridLayout.layout(uiElement);
 	}
 
 }

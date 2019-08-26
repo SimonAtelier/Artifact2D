@@ -8,6 +8,7 @@ public class GridLayout implements Layout {
 	private int cols;
 	private int layoutY;
 	private int layoutX;
+	private int minimumHeight;
 	private int maxRowWidth;
 	private int maxRowHeight;
 	private UiElement parent;
@@ -38,14 +39,20 @@ public class GridLayout implements Layout {
 				updateMaxRowHeight();
 				childIndex++;
 			}
+			translateLayoutY(getMaxRowHeight());
+			expandMinimumHeight(getMaxRowHeight());
 			updateMaxRowWidth();
+			setMaxRowHeight(0);
 			setLayoutX(0);
-			translateLayoutY(maxRowHeight);
 		}
 	}
 	
+	private void expandMinimumHeight(int amount) {
+		minimumHeight += amount;
+	}
+	
 	private void updateMaxRowWidth() {
-		maxRowWidth = layoutX > maxRowWidth ? layoutX : maxRowWidth;
+		maxRowWidth = getLayoutX() > maxRowWidth ? getLayoutX() : maxRowWidth;
 	}
 	
 	private void updateMaxRowHeight() {
@@ -53,7 +60,7 @@ public class GridLayout implements Layout {
 	}
 	
 	private void reset() {
-		maxRowWidth = maxRowHeight = layoutY = layoutX = 0;
+		maxRowWidth = maxRowHeight = layoutY = layoutX = minimumHeight = 0;
 	}
 
 	private void translateLayoutX(int amount) {
@@ -65,8 +72,8 @@ public class GridLayout implements Layout {
 	}
 
 	private void applyLayoutCoordinatesToChild() {
-		child.setLayoutX(layoutX);
-		child.setLayoutY(layoutY);
+		child.setLayoutX(getLayoutX());
+		child.setLayoutY(getLayoutY());
 	}
 
 	private void applyLayoutDimensionToParent() {
@@ -80,7 +87,7 @@ public class GridLayout implements Layout {
 	}
 
 	private void applyLayoutHeight() {
-		int layoutHeight = layoutY > parent.getHeight() ? layoutY - parent.getHeight() : 0;
+		int layoutHeight = minimumHeight > parent.getHeight() ? minimumHeight - parent.getHeight() : 0;
 		parent.setLayoutHeight(layoutHeight);
 	}
 	
@@ -108,6 +115,14 @@ public class GridLayout implements Layout {
 		return child.getBorderBoxHeight();
 	}
 	
+	private int getLayoutY() {
+		return layoutY;
+	}
+	
+	private int getLayoutX() {
+		return layoutX;
+	}
+	
 	private void setLayoutX(int layoutX) {
 		this.layoutX = layoutX;
 	}
@@ -122,6 +137,30 @@ public class GridLayout implements Layout {
 
 	private void setChild(UiElement child) {
 		this.child = child;
+	}
+	
+	private int getMaxRowHeight() {
+		return maxRowHeight;
+	}
+	
+	private void setMaxRowHeight(int maxRowHeight) {
+		this.maxRowHeight = maxRowHeight;
+	}
+
+	protected int getRows() {
+		return rows;
+	}
+
+	protected void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	protected int getCols() {
+		return cols;
+	}
+
+	protected void setCols(int cols) {
+		this.cols = cols;
 	}
 
 }
