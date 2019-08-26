@@ -121,12 +121,28 @@ public abstract class AbstractAxisLayout implements Layout {
 		return parent.getHeight();
 	}
 	
-	protected int getChildWidth() {
-		return child.getBorderBoxWidth() + child.getMargin().getHorizontalInsets();
+	protected int getNeededWidthOfChild() {
+		return getChildBorderBoxWidth() + getHorizontalChildMargin();
 	}
 	
-	protected int getChildHeight() {
-		return child.getBorderBoxHeight() + child.getMargin().getVerticalInsets();
+	protected int getNeededHeightOfChild() {
+		return getChildBorderBoxHeight() + getVerticalChildMargin();
+	}
+	
+	private int getHorizontalChildMargin() {
+		return child.getMargin().getHorizontalInsets();
+	}
+	
+	private int getVerticalChildMargin() {
+		return child.getMargin().getVerticalInsets();
+	}
+	
+	private int getChildBorderBoxWidth() {
+		return child.getBorderBoxWidth();
+	}
+	
+	private int getChildBorderBoxHeight() {
+		return child.getBorderBoxHeight();
 	}
 	
 	private void setParent(UiElement uiElement) {

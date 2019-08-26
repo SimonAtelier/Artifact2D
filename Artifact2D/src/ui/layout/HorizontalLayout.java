@@ -14,15 +14,15 @@ public class HorizontalLayout extends AbstractAxisLayout {
 	}
 
 	private void updateLayoutX() {
-		setLayoutX(getLayoutX() + getChildWidth());
+		setLayoutX(getLayoutX() + getNeededWidthOfChild());
 	}
 
 	private void updateMinimumWidth() {
-		expandMinimumWidth(getChildWidth());
+		expandMinimumWidth(getNeededWidthOfChild());
 	}
 
 	private void updateMinimumHeight() {
-		int childHeight = getChildHeight();
+		int childHeight = getNeededHeightOfChild();
 		int minimumHeight = childHeight > getMinimumHeight() ? childHeight : getMinimumHeight();
 		setMinimumHeight(minimumHeight);
 	}

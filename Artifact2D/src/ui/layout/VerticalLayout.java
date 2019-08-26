@@ -14,17 +14,17 @@ public class VerticalLayout extends AbstractAxisLayout {
 	}
 
 	private void updateLayoutY() {
-		setLayoutY(getLayoutY() + getChildHeight());
+		setLayoutY(getLayoutY() + getNeededHeightOfChild());
 	}
 
 	private void updateMinimumWidth() {
-		int childWidth = getChildWidth();
+		int childWidth = getNeededWidthOfChild();
 		int minimumWidth = childWidth > getMinimumWidth() ? childWidth : getMinimumWidth();
 		setMinimumWidth(minimumWidth);
 	}
 
 	private void updateMinimumHeight() {
-		expandMinimumHeight(getChildHeight());
+		expandMinimumHeight(getNeededHeightOfChild());
 	}
 
 }
