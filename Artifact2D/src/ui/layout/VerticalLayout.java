@@ -14,7 +14,7 @@ public class VerticalLayout extends AbstractAxisLayout {
 	}
 
 	private void updateLayoutY() {
-		setLayoutY(getLayoutY() + getNeededHeightOfChild());
+		translateLayoutY(getNeededHeightOfChild());
 	}
 
 	private void updateMinimumWidth() {

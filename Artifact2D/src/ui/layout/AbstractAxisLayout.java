@@ -81,6 +81,14 @@ public abstract class AbstractAxisLayout implements Layout {
 		getChild().setLayoutY(layoutY);
 	}
 	
+	protected void translateLayoutX(int amount) {
+		layoutX += amount;
+	}
+	
+	protected void translateLayoutY(int amount) {
+		layoutY += amount;
+	}
+	
 	private UiElement getParent() {
 		return parent;
 	}
