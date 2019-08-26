@@ -29,38 +29,48 @@ public class GridLayout implements Layout {
 
 	private void layoutChildren() {
 		int childIndex = 0;
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				if (childIndex >= parent.getChildCount())
+		for (int row = 0; row < getRows(); row++) {
+			for (int col = 0; col < getCols(); col++) {
+				if (childIndex >= getChildCount())
 					break;
 				setChild(getParent().getChildAt(childIndex));
-				applyLayoutCoordinatesToChild();
-				translateLayoutX(getNeededWidthOfChild());
-				updateMaxRowHeight();
+				updateCol();
 				childIndex++;
 			}
-			translateLayoutY(getMaxRowHeight());
-			expandMinimumHeight(getMaxRowHeight());
-			updateMaxRowWidth();
-			setMaxRowHeight(0);
-			setLayoutX(0);
+			updateRow();
 		}
 	}
-	
+
+	private void updateCol() {
+		applyLayoutCoordinatesToChild();
+		translateLayoutX(getNeededWidthOfChild());
+		updateMaxRowHeight();
+	}
+
+	private void updateRow() {
+		translateLayoutY(getMaxRowHeight());
+		expandMinimumHeight(getMaxRowHeight());
+		updateMaxRowWidth();
+		setMaxRowHeight(0);
+		setLayoutX(0);
+	}
+
 	private void expandMinimumHeight(int amount) {
 		minimumHeight += amount;
 	}
-	
+
 	private void updateMaxRowWidth() {
-		maxRowWidth = getLayoutX() > maxRowWidth ? getLayoutX() : maxRowWidth;
+		if (needToUpdateMaxRowWidth())
+			setMaxRowWidth(getLayoutX());
 	}
-	
+
 	private void updateMaxRowHeight() {
-		maxRowHeight = getNeededHeightOfChild() > maxRowHeight ? getNeededHeightOfChild() : maxRowHeight;
+		if (needToUpdateMaxRowHeight())
+			setMaxRowHeight(getNeededHeightOfChild());
 	}
-	
+
 	private void reset() {
-		maxRowWidth = maxRowHeight = layoutY = layoutX = minimumHeight = 0;
+		maxRowWidth = maxRowHeight = minimumHeight = layoutX = layoutY = 0;
 	}
 
 	private void translateLayoutX(int amount) {
@@ -82,51 +92,81 @@ public class GridLayout implements Layout {
 	}
 
 	private void applyLayoutWidth() {
-		int layoutWidth = maxRowWidth > parent.getWidth() ? maxRowWidth - parent.getWidth() : 0;
-		parent.setLayoutWidth(layoutWidth);
+		setParentLayoutWidth(needToApplyLayoutWidth() ? calculateLayoutWidth() : 0);
 	}
 
 	private void applyLayoutHeight() {
-		int layoutHeight = minimumHeight > parent.getHeight() ? minimumHeight - parent.getHeight() : 0;
-		parent.setLayoutHeight(layoutHeight);
+		setParentLayoutHeight(needToApplyLayoutHeight() ? calculateLayoutHeight() : 0);
 	}
-	
-	protected int getNeededWidthOfChild() {
+
+	private boolean needToApplyLayoutWidth() {
+		return getMaxRowWidth() > getParentWidth();
+	}
+
+	private boolean needToApplyLayoutHeight() {
+		return getMinimumHeight() > getParentHeight();
+	}
+
+	private boolean needToUpdateMaxRowWidth() {
+		return getLayoutX() > getMaxRowWidth();
+	}
+
+	private boolean needToUpdateMaxRowHeight() {
+		return getNeededHeightOfChild() > getMaxRowHeight();
+	}
+
+	private int calculateLayoutWidth() {
+		return getMaxRowWidth() - getParentWidth();
+	}
+
+	private int calculateLayoutHeight() {
+		return getMinimumHeight() - getParentHeight();
+	}
+
+	private int getNeededWidthOfChild() {
 		return getChildBorderBoxWidth() + getHorizontalChildMargin();
 	}
-	
-	protected int getNeededHeightOfChild() {
+
+	private int getNeededHeightOfChild() {
 		return getChildBorderBoxHeight() + getVerticalChildMargin();
 	}
-	
+
+	private void setParentLayoutWidth(int layoutWidth) {
+		getParent().setLayoutWidth(layoutWidth);
+	}
+
+	private void setParentLayoutHeight(int layoutHeight) {
+		getParent().setLayoutHeight(layoutHeight);
+	}
+
 	private int getHorizontalChildMargin() {
 		return child.getMargin().getHorizontalInsets();
 	}
-	
+
 	private int getVerticalChildMargin() {
 		return child.getMargin().getVerticalInsets();
 	}
-	
+
 	private int getChildBorderBoxWidth() {
 		return child.getBorderBoxWidth();
 	}
-	
+
 	private int getChildBorderBoxHeight() {
 		return child.getBorderBoxHeight();
 	}
-	
+
 	private int getLayoutY() {
 		return layoutY;
 	}
-	
+
 	private int getLayoutX() {
 		return layoutX;
 	}
-	
+
 	private void setLayoutX(int layoutX) {
 		this.layoutX = layoutX;
 	}
-	
+
 	private UiElement getParent() {
 		return parent;
 	}
@@ -135,16 +175,40 @@ public class GridLayout implements Layout {
 		this.parent = parent;
 	}
 
+	private int getParentWidth() {
+		return getParent().getWidth();
+	}
+
+	private int getParentHeight() {
+		return getParent().getHeight();
+	}
+
 	private void setChild(UiElement child) {
 		this.child = child;
 	}
-	
+
 	private int getMaxRowHeight() {
 		return maxRowHeight;
 	}
-	
+
 	private void setMaxRowHeight(int maxRowHeight) {
 		this.maxRowHeight = maxRowHeight;
+	}
+
+	private int getMaxRowWidth() {
+		return maxRowWidth;
+	}
+
+	private void setMaxRowWidth(int maxRowWidth) {
+		this.maxRowWidth = maxRowWidth;
+	}
+
+	private int getMinimumHeight() {
+		return minimumHeight;
+	}
+
+	private int getChildCount() {
+		return getParent().getChildCount();
 	}
 
 	protected int getRows() {
